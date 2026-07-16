@@ -2,20 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { RotateCcw, X, ZoomIn, ZoomOut } from 'lucide-react'
-import { defaultImages, galleryFilters, galleryStorageKey, type GalleryImage } from '@/lib/gallery'
-
-function readCustomImages() {
-  if (typeof window === 'undefined') {
-    return []
-  }
-
-  try {
-    const storedImages = window.localStorage.getItem(galleryStorageKey)
-    return storedImages ? (JSON.parse(storedImages) as GalleryImage[]) : []
-  } catch {
-    return []
-  }
-}
+import { defaultImages, galleryFilters, type GalleryImage } from '@/lib/gallery'
 
 export default function GalleryClient() {
   const [activeCategory, setActiveCategory] = useState('all')
@@ -24,16 +11,20 @@ export default function GalleryClient() {
   const [zoomLevel, setZoomLevel] = useState(1)
 
   useEffect(() => {
-    setCustomImages(readCustomImages())
+    const loadCustomImages = async () => {
+      try {
+        const response = await fetch('/api/gallery', { cache: 'no-store' })
+        const data = (await response.json()) as { images?: GalleryImage[] }
 
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === galleryStorageKey) {
-        setCustomImages(readCustomImages())
+        if (response.ok) {
+          setCustomImages(data.images ?? [])
+        }
+      } catch {
+        setCustomImages([])
       }
     }
 
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    loadCustomImages()
   }, [])
 
   useEffect(() => {
