@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, MapPin } from 'lucide-react'
 
@@ -25,24 +24,24 @@ export default function Footer() {
             <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/" className="text-muted-foreground hover:text-primary transition-colors">
                   Home
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/about" className="text-muted-foreground hover:text-primary transition-colors">
                   About Us
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/gallery" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/gallery" className="text-muted-foreground hover:text-primary transition-colors">
                   Gallery
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

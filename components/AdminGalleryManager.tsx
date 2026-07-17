@@ -234,8 +234,12 @@ export default function AdminGalleryManager() {
     setMessage('Removing image...')
 
     try {
-      const response = await fetch(`/api/gallery?id=${encodeURIComponent(imageId)}`, {
+      const response = await fetch('/api/gallery', {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: imageId }),
       })
       const data = (await response.json()) as { images?: GalleryImage[]; message?: string }
 

@@ -58,7 +58,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const authError = await requireAdmin()
+  const authError = await requireAdmin(request)
 
   if (authError) {
     return authError
@@ -115,13 +115,13 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const authError = await requireAdmin()
+  const authError = await requireAdmin(request)
 
   if (authError) {
     return authError
   }
 
-  const imageId = request.nextUrl.searchParams.get('id')
+  const imageId = request.nextUrl.searchParams.get('id') || (await request.json().catch(() => null) as { id?: string } | null)?.id
 
   if (!imageId) {
     return jsonError('Missing image id.')

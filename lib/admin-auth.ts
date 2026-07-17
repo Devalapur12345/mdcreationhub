@@ -1,6 +1,6 @@
 import { createHmac, randomBytes, timingSafeEqual, pbkdf2Sync } from 'crypto'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 const adminUsername = 'Kabir2528'
 const passwordSalt = '5b6b3741e639e587fecc609c8d43d9bd'
@@ -8,7 +8,7 @@ const passwordHash = '810234b940bb7fe68abbbd14aaef1c3991e3729c2d463acda74c070c6f
 const iterations = 210000
 const keyLength = 32
 const digest = 'sha256'
-const sessionCookieName = 'mk-admin-session'
+export const sessionCookieName = 'mk-admin-session'
 const sessionMaxAge = 60 * 60 * 12
 
 function getSessionSecret() {
@@ -53,8 +53,8 @@ export function clearAdminSession(response: NextResponse) {
   })
 }
 
-export async function isAdminAuthenticated() {
-  const cookieStore = await cookies()
+export async function isAdminAuthenticated(request?: NextRequest) {
+  const cookieStore = request?.cookies ?? (await cookies())
   const session = cookieStore.get(sessionCookieName)?.value
 
   if (!session) {
@@ -74,8 +74,8 @@ export async function isAdminAuthenticated() {
   return signatureBuffer.length === expectedBuffer.length && timingSafeEqual(signatureBuffer, expectedBuffer)
 }
 
-export async function requireAdmin() {
-  if (await isAdminAuthenticated()) {
+export async function requireAdmin(request?: NextRequest) {
+  if (await isAdminAuthenticated(request)) {
     return null
   }
 
